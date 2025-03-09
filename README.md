@@ -23,10 +23,14 @@ Follow the steps below to set up the environment and install the necessary depen
    Create a `.env` file in the root directory of your project and add the following environment variables:
 
    ```bash
-   TAIGA_API_URL=https://api.taiga.io/api/v1
-   TAIGA_USERNAME=<username>
-   TAIGA_PASSWORD=<password>
-   DATABASE_URL=postgresql://user:password@host:port/dbname
+    TAIGA_API_URL=https://api.taiga.io/api/v1
+    TAIGA_USERNAME=<username>
+    TAIGA_PASSWORD=<password>
+    DATABASE_HOST=localhost
+    DATABASE_PORT=5432
+    DATABASE_NAME=dbo
+    DATABASE_USER=taiga
+    DATABASE_PASSWORD=taiga
    ```
 
 3. **Create a virtual environment** for the project (recommended):
