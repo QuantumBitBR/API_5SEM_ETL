@@ -1,6 +1,6 @@
-from config.database import Database
-from extract.projects import get_projects
-from extract.user_storys import get_user_storys_by_project
+from src.config.database import Database
+from src.extract.projects import get_projects
+from src.extract.user_storys import get_user_storys_by_project
 
 
 def main():

@@ -1,4 +1,4 @@
-from config import config
+from src.config import config
 
 
 def get_user_storys_by_project(id_project):
