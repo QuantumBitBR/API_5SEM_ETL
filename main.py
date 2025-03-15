@@ -7,7 +7,6 @@ from src.utils.logger import Logger
 def main():
     """main."""
 
-    
     Logger.initialize("etl_process")
 
     db = Database()
@@ -15,7 +14,7 @@ def main():
 
     upsert_all_projects()
     upsert_all_tags()
-    
+
     Logger.info("Finished ETL process")
 
 
