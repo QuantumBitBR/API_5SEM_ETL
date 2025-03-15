@@ -1,7 +1,7 @@
 from src.config import config
 
 
-def get_projects():
+def get_all_projects():
     """Returns a list of projects from Taiga."""
 
     client = config.TaigaClient()
