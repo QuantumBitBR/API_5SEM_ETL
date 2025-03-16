@@ -1,5 +1,3 @@
-import logging
-
 from src.config import config
 from src.utils.logger import Logger
 

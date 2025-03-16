@@ -64,3 +64,11 @@ Once the dependencies are installed, you can run the project using the following
 ```bash
 python3 main.py
 ```
+
+## Runnig tests
+
+To run the tests, use the following command:
+
+```bash
+python3 -m unittest discover -s tests
+```
