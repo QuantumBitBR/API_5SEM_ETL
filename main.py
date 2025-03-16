@@ -1,26 +1,23 @@
 from src.config.database import Database
-from src.extract.projects import get_projects
-from src.extract.user_storys import get_user_storys_by_project
+from src.map.fact_user_storie import upsert_fact_user_storie
+from src.map.projects import upsert_all_projects
+from src.map.tags import upsert_all_tags
+from src.utils.logger import Logger
 
 
 def main():
     """main."""
 
-    db = Database()
-    
-    print(db.health_check())
-    
-    
-    projects = get_projects()
-    print(f"Extraídos {len(projects)} projetos.")
-    for project in projects:
-        print(project["name"])
-        user_storys = get_user_storys_by_project(project["id"])
-        print(f"Extraídos {len(user_storys)} user stories.")
-        for user_story in user_storys:
-            print(user_story)
+    Logger.initialize("etl_process")
 
-        print("-" * 40)
+    db = Database()
+    print(db.health_check())
+
+    upsert_all_projects()
+    upsert_all_tags()
+    upsert_fact_user_storie()
+
+    Logger.info("Finished ETL process")
 
 
 if __name__ == "__main__":
