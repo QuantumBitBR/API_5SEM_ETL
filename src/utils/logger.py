@@ -14,7 +14,7 @@ class Logger:
 
         logging.basicConfig(
             level=logging.INFO,
-            format="%(asctime)s - %(levelname)s - %(pathname)s - %(lineno)d - %(message)s",
+            format="%(asctime)s - %(levelname)s - %(pathname)s.%(lineno)d - %(message)s",
             handlers=[logging.FileHandler(log_filepath), logging.StreamHandler()],
         )
 
