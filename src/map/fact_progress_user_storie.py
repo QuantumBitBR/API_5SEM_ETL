@@ -15,8 +15,10 @@ def process_fact_progress_user_storie():
 
     Logger.info("Starting upsert_fact_progress_user_storie process")
     extract = extract_data_2_fact_progress_user_storie()
+    
+    Logger.info("Zeroing all progress quantities...")
+    zero_all_progress()
 
-    Logger.info(f"Extracted {len(extract)} user stories from project")
     Logger.info(f"Upserting fact progress user storie...")
     upsert_fact_progress_user_storie(extract)
 
@@ -135,6 +137,21 @@ def upsert_fact_progress_user_storie(etl_progress):
                 Logger.info(f"Updated fact progress for key: {key}")
     except Exception as e:
         Logger.error(f"An error occurred: {e}")
+    finally:
+        cursor.close()
+        db.release_connection(conn)
+        Logger.info("Database connection closed")
+
+def zero_all_progress():
+    db = Database()
+    conn = db.get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("UPDATE public.fato_progresso_user_stories SET quantidade_user_stories = 0")
+        conn.commit()
+        Logger.info("All progress quantities updated to 0")
+    except Exception as e:
+        Logger.error(f"An error occurred while updating progress quantities: {e}")
     finally:
         cursor.close()
         db.release_connection(conn)
