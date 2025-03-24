@@ -26,7 +26,7 @@ def process_fact_progress_user_storie():
 def extract_data_2_fact_progress_user_storie():
 
     select_id_project = (
-        "SELECT id FROM public.dim_projeto WHERE LOWER(name) = LOWER(%s)"
+        "SELECT id FROM public.dim_projeto WHERE LOWER(nome) = LOWER(%s)"
     )
     select_id_tag = "SELECT id FROM public.dim_tag WHERE LOWER(nome) = LOWER(%s)"
     select_id_status = "SELECT id FROM public.dim_status WHERE LOWER(tipo) = LOWER(%s)"
