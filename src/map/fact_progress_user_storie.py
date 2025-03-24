@@ -15,7 +15,7 @@ def process_fact_progress_user_storie():
 
     Logger.info("Starting upsert_fact_progress_user_storie process")
     extract = extract_data_2_fact_progress_user_storie()
-    
+
     Logger.info("Zeroing all progress quantities...")
     zero_all_progress()
 
@@ -53,7 +53,9 @@ def extract_data_2_fact_progress_user_storie():
                 cursor = conn.cursor()
                 cursor.execute(select_id_project, (project["name"],))
                 internal_id_project = cursor.fetchone()[0]
-                Logger.info(f"Fetched internal project ID: {internal_id_project} for project {project['name']}")
+                Logger.info(
+                    f"Fetched internal project ID: {internal_id_project} for project {project['name']}"
+                )
 
                 for tag in story["tags"]:
                     cursor.execute(select_id_tag, (tag[0],))
@@ -63,7 +65,9 @@ def extract_data_2_fact_progress_user_storie():
 
                 cursor.execute(select_id_status, (story["status_extra_info"]["name"],))
                 internal_id_status = cursor.fetchone()[0]
-                Logger.info(f"Fetched internal status ID: {internal_id_status} for status {story['status_extra_info']['name']}")
+                Logger.info(
+                    f"Fetched internal status ID: {internal_id_status} for status {story['status_extra_info']['name']}"
+                )
 
                 for tag in internal_id_tag:
                     internal_key = f"{internal_id_project}-{tag}-{internal_id_status}"
@@ -142,12 +146,15 @@ def upsert_fact_progress_user_storie(etl_progress):
         db.release_connection(conn)
         Logger.info("Database connection closed")
 
+
 def zero_all_progress():
     db = Database()
     conn = db.get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("UPDATE public.fato_progresso_user_stories SET quantidade_user_stories = 0")
+        cursor.execute(
+            "UPDATE public.fato_progresso_user_stories SET quantidade_user_stories = 0"
+        )
         conn.commit()
         Logger.info("All progress quantities updated to 0")
     except Exception as e:
