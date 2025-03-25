@@ -46,14 +46,14 @@ class TestUpsertAllProjects(unittest.TestCase):
 
         # Ensure the correct SQL queries were executed
         mock_cursor.execute.assert_any_call(
-            "SELECT * FROM public.dim_projeto WHERE LOWER(name) = LOWER(%s)",
+            "SELECT * FROM public.dim_projeto WHERE LOWER(nome) = LOWER(%s)",
             ("Project1",),
         )
         mock_cursor.execute.assert_any_call(
-            "INSERT INTO public.dim_projeto (name) VALUES (LOWER(%s))", ("Project1",)
+            "INSERT INTO public.dim_projeto (nome) VALUES (LOWER(%s))", ("Project1",)
         )
         mock_cursor.execute.assert_any_call(
-            "SELECT * FROM public.dim_projeto WHERE LOWER(name) = LOWER(%s)",
+            "SELECT * FROM public.dim_projeto WHERE LOWER(nome) = LOWER(%s)",
             ("Project2",),
         )
 

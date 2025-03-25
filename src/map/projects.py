@@ -11,8 +11,8 @@ def upsert_all_projects():
     projects = get_all_projects()
     Logger.info(f"Retrieved {len(projects)} projects from source")
 
-    insert_query = "INSERT INTO public.dim_projeto (name) VALUES (LOWER(%s))"
-    select_query = "SELECT * FROM public.dim_projeto WHERE LOWER(name) = LOWER(%s)"
+    insert_query = "INSERT INTO public.dim_projeto (nome) VALUES (LOWER(%s))"
+    select_query = "SELECT * FROM public.dim_projeto WHERE LOWER(nome) = LOWER(%s)"
 
     for project in projects:
         Logger.info(f"Processing project: {project['name']}")
