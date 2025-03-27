@@ -4,6 +4,7 @@ from src.map.fact_tag_user_storie import process_fact_tag_user_storie
 from src.map.projects import upsert_all_projects
 from src.map.status import upsert_all_status
 from src.map.tags import upsert_all_tags
+from src.map.user_stories import upsert_all_user_stories
 from src.utils.logger import Logger
 
 
@@ -20,6 +21,8 @@ def main():
     upsert_all_status()
     Logger.info("-----------------------------------------------")
     upsert_all_tags()
+    Logger.info("-----------------------------------------------")
+    upsert_all_user_stories()
     Logger.info("-----------------------------------------------")
     process_fact_status_user_storie()
     Logger.info("-----------------------------------------------")
