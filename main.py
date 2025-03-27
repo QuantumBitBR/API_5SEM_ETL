@@ -5,6 +5,7 @@ from src.map.projects import upsert_all_projects
 from src.map.status import upsert_all_status
 from src.map.tags import upsert_all_tags
 from src.map.user_stories import upsert_all_user_stories
+from src.map.users import upsert_all_users
 from src.utils.logger import Logger
 
 
@@ -17,6 +18,8 @@ def main():
     print(db.health_check())
 
     upsert_all_projects()
+    Logger.info("-----------------------------------------------")
+    upsert_all_users()
     Logger.info("-----------------------------------------------")
     upsert_all_status()
     Logger.info("-----------------------------------------------")
