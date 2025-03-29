@@ -14,7 +14,7 @@ def upsert_all_user_stories():
     select_user_story_by_taiga_id = (
         "SELECT * FROM public.dim_user_story WHERE id_taiga = CAST(%s AS BIGINT)"
     )
-    
+
     insert_user_story = "INSERT INTO public.dim_user_story (id_taiga, assunto, criado_em, finalizado_em, bloqueado, encerrado, data_limite) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     update_user_story = "UPDATE public.dim_user_story SET assunto = %s, criado_em = %s, finalizado_em = %s, bloqueado = %s, encerrado = %s, data_limite = %s WHERE id_taiga = %s"
 
@@ -26,7 +26,6 @@ def upsert_all_user_stories():
                 f"Extracted {len(stories)} user stories from project {project['name']} (ID: {project['id']})"
             )
             for story in stories:
-                
 
                 try:
                     cursor = conn.cursor()
@@ -34,17 +33,37 @@ def upsert_all_user_stories():
                     story_in_bd = cursor.fetchone()
 
                     if story_in_bd is None:
-                        cursor.execute(insert_user_story, (story["id"],story["subject"],story["created_date"], story["finish_date"], story["is_blocked"], story["is_closed"], story["due_date"]))
+                        cursor.execute(
+                            insert_user_story,
+                            (
+                                story["id"],
+                                story["subject"],
+                                story["created_date"],
+                                story["finish_date"],
+                                story["is_blocked"],
+                                story["is_closed"],
+                                story["due_date"],
+                            ),
+                        )
                         conn.commit()
                         Logger.info(f"Inserted story {story['id']}")
                     else:
-                        cursor.execute(update_user_story, (story["subject"],story["created_date"], story["finish_date"], story["is_blocked"], story["is_closed"], story["due_date"], story["id"]))
+                        cursor.execute(
+                            update_user_story,
+                            (
+                                story["subject"],
+                                story["created_date"],
+                                story["finish_date"],
+                                story["is_blocked"],
+                                story["is_closed"],
+                                story["due_date"],
+                                story["id"],
+                            ),
+                        )
                         conn.commit()
                         Logger.info(f"Updated story {story['id']}")
                 except Exception as e:
-                    Logger.error(
-                        f"Error processing status {story['id']}: {e}"
-                    )
+                    Logger.error(f"Error processing status {story['id']}: {e}")
                 finally:
                     cursor.close()
 

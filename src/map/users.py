@@ -11,12 +11,10 @@ def upsert_all_users():
     users = get_all_users()
     Logger.info(f"Retrieved {len(users)} users from source")
 
-    select_user_by_email = (
-        "SELECT * FROM public.dim_usuario WHERE email = %s"
-    )
+    select_user_by_email = "SELECT * FROM public.dim_usuario WHERE email = %s"
     insert_user = "INSERT INTO public.dim_usuario (nome, email) VALUES (%s, %s)"
     update_user = "UPDATE public.dim_usuario SET nome = %s WHERE email = %s"
-    
+
     conn = db.get_connection()
     try:
         for user in users:
@@ -26,17 +24,19 @@ def upsert_all_users():
                 user_in_bd = cursor.fetchone()
 
                 if user_in_bd is None:
-                    cursor.execute(insert_user, (user["full_name_display"], user["email"]))
+                    cursor.execute(
+                        insert_user, (user["full_name_display"], user["email"])
+                    )
                     conn.commit()
                     Logger.info(f"Inserted user {user['email']}")
                 else:
-                    cursor.execute(update_user, (user["full_name_display"], user["email"]))
+                    cursor.execute(
+                        update_user, (user["full_name_display"], user["email"])
+                    )
                     conn.commit()
                     Logger.info(f"Updated user {user['email']}")
             except Exception as e:
-                Logger.error(
-                    f"Error processing user {user['email']}: {e}"
-                )
+                Logger.error(f"Error processing user {user['email']}: {e}")
             finally:
                 cursor.close()
 
