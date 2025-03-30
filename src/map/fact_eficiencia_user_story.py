@@ -71,7 +71,11 @@ def process_data_2_fact_eficiencia():
                     
                 duration = (finish_date - created_date).total_seconds() / 60  # Convert duration to minutes
 
-                taiga_id = story["assigned_to_extra_info"]["id"]
+                assigned_to_extra_info = story.get("assigned_to_extra_info")
+                taiga_id = assigned_to_extra_info.get("id") if assigned_to_extra_info else None
+                if taiga_id is None:
+                    Logger.info(f"Assigned user is None for story {story['id']}... skipping")
+                    continue
                 
                 user_complete = get_user_by_id(taiga_id)
                 if user_complete is None:
@@ -94,16 +98,13 @@ def process_data_2_fact_eficiencia():
                     f"Fetched internal user story ID: {internal_user_story_id} for user story {story['id']}"
                 )
                 
-                
-                
+                # Check if the record already exists in the database
+                cursor.execute(select_eficiencia, (internal_user_id, internal_user_story_id, internal_project_id))
+                existing_record = cursor.fetchone()
                 
                 Logger.info(
                     f"Story {story['id']} - Start Date: {created_date}, End Date: {finish_date}, Duration (minutes): {duration}"
                 )
-                
-                # Check if the record already exists in the database
-                cursor.execute(select_eficiencia, (internal_user_id, internal_user_story_id, internal_project_id))
-                existing_record = cursor.fetchone()
                 
                 if existing_record:
                     # Update the existing record
