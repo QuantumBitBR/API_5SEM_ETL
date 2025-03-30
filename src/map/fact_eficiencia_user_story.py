@@ -59,6 +59,17 @@ def process_data_2_fact_eficiencia():
             for story in stories:
                 internal_user_id = None
                 internal_user_story_id = None
+                
+                # tempo_medio = created_date - finish_date (case finish date is None, use now())
+                created_date = datetime.datetime.strptime(story["created_date"], "%Y-%m-%dT%H:%M:%S.%fZ")
+                finish_date = story["finish_date"]
+                if finish_date is None:
+                    Logger.info(f"Finish date is None for story {story['id']}... not use")
+                    continue
+                else:
+                    finish_date = datetime.datetime.strptime(finish_date, "%Y-%m-%dT%H:%M:%S.%fZ")
+                    
+                duration = (finish_date - created_date).total_seconds() / 60  # Convert duration to minutes
 
                 taiga_id = story["assigned_to_extra_info"]["id"]
                 
@@ -83,15 +94,7 @@ def process_data_2_fact_eficiencia():
                     f"Fetched internal user story ID: {internal_user_story_id} for user story {story['id']}"
                 )
                 
-                # tempo_medio = created_date - finish_date (case finish date is None, use now())
-                created_date = datetime.datetime.strptime(story["created_date"], "%Y-%m-%dT%H:%M:%S.%fZ")
-                finish_date = story["finish_date"]
-                if finish_date is None:
-                    finish_date = datetime.datetime.now()
-                else:
-                    finish_date = datetime.datetime.strptime(finish_date, "%Y-%m-%dT%H:%M:%S.%fZ")
-                    
-                duration = (finish_date - created_date).total_seconds() / 60  # Convert duration to minutes
+                
                 
                 
                 Logger.info(
