@@ -76,15 +76,15 @@ def process_data_2_fact_eficiencia():
                 )
 
                 assigned_to_extra_info = story.get("assigned_to_extra_info")
-                taiga_id = assigned_to_extra_info.get("id") if assigned_to_extra_info else None
-                if taiga_id is None:
+                taiga_user_id = assigned_to_extra_info.get("id") if assigned_to_extra_info else None
+                if taiga_user_id is None:
                     Logger.warning(f"Assigned user is None for story {story['id']}... skipping")
                     continue
 
-                Logger.info(f"Fetching user details for Taiga ID: {taiga_id}")
-                user_complete = get_user_by_id(taiga_id)
+                Logger.info(f"Fetching user details for Taiga ID: {taiga_user_id}")
+                user_complete = get_user_by_id(taiga_user_id)
                 if user_complete is None:
-                    Logger.error(f"User {taiga_id} not found in Taiga... skipping story {story['id']}")
+                    Logger.error(f"User {taiga_user_id} not found in Taiga... skipping story {story['id']}")
                     continue
 
                 Logger.info(f"Fetched user details: {user_complete}")
