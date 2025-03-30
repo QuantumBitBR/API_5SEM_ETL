@@ -36,6 +36,8 @@ def main():
     Logger.info("-----------------------------------------------")
     process_data_2_fact_temporais()
     Logger.info("-----------------------------------------------")
+    
+    Database().close_pool()
 
     Logger.info("Finished ETL process")
 
