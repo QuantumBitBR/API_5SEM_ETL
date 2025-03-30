@@ -55,9 +55,10 @@ def process_data_2_fact_temporais():
     
     now = datetime.datetime.now()  # Calculate 'now' once outside the loop
     
+    eficiencia = {}
+    conn = Database().get_connection()
+    cursor = conn.cursor()
     for projetc in projects:
-        conn = Database().get_connection()
-        cursor = conn.cursor()
         
         # buscar o id do projeto
         cursor.execute(select_internal_project_id, (projetc["name"],))
@@ -67,7 +68,6 @@ def process_data_2_fact_temporais():
         
         stories = get_user_storys_by_project(projetc["id"])
         
-        eficiencia = {}
         
         
         for story in stories:
@@ -131,58 +131,58 @@ def process_data_2_fact_temporais():
                     temp.quantidade_user_stories_finalizadas += 1
             
         
-        # Clear all data from the table before processing
-        truncate_query = "TRUNCATE TABLE public.fato_user_story_temporais RESTART IDENTITY CASCADE"
-        cursor.execute(truncate_query)
-        Logger.info("Cleared all data from public.fato_user_story_temporais")
-            
-        for key, temp in eficiencia.items():
-            # Check if the record already exists
-            select_query = """
-            SELECT quantidade_user_stories_criadas, quantidade_user_stories_finalizadas 
-            FROM public.fato_user_story_temporais 
+    # Clear all data from the table before processing
+    truncate_query = "TRUNCATE TABLE public.fato_user_story_temporais RESTART IDENTITY CASCADE"
+    cursor.execute(truncate_query)
+    Logger.info("Cleared all data from public.fato_user_story_temporais")
+        
+    for key, temp in eficiencia.items():
+        # Check if the record already exists
+        select_query = """
+        SELECT quantidade_user_stories_criadas, quantidade_user_stories_finalizadas 
+        FROM public.fato_user_story_temporais 
+        WHERE id_usuario = %s AND id_periodo = %s AND id_projeto = %s
+        """
+        cursor.execute(select_query, (temp.id_usuario, temp.id_periodo, temp.id_projeto))
+        result = cursor.fetchone()
+
+        if result:
+            # Update the existing record
+            update_query = """
+            UPDATE public.fato_user_story_temporais 
+            SET quantidade_user_stories_criadas = %s, 
+                quantidade_user_stories_finalizadas = %s
             WHERE id_usuario = %s AND id_periodo = %s AND id_projeto = %s
             """
-            cursor.execute(select_query, (temp.id_usuario, temp.id_periodo, temp.id_projeto))
-            result = cursor.fetchone()
-
-            if result:
-                # Update the existing record
-                update_query = """
-                UPDATE public.fato_user_story_temporais 
-                SET quantidade_user_stories_criadas = %s, 
-                    quantidade_user_stories_finalizadas = %s
-                WHERE id_usuario = %s AND id_periodo = %s AND id_projeto = %s
-                """
-                cursor.execute(
-                    update_query,
-                    (
-                        temp.quantidade_user_stories_criadas,
-                        temp.quantidade_user_stories_finalizadas,
-                        temp.id_usuario,
-                        temp.id_periodo,
-                        temp.id_projeto,
-                    ),
-                )
-            else:
-                # Insert a new record
-                insert_query = """
-                INSERT INTO public.fato_user_story_temporais (
-                    id_usuario, id_periodo, id_projeto, 
-                    quantidade_user_stories_criadas, quantidade_user_stories_finalizadas
-                ) VALUES (%s, %s, %s, %s, %s)
-                """
-                cursor.execute(
-                    insert_query,
-                    (
-                        temp.id_usuario,
-                        temp.id_periodo,
-                        temp.id_projeto,
-                        temp.quantidade_user_stories_criadas,
-                        temp.quantidade_user_stories_finalizadas,
-                    ),
-                )
+            cursor.execute(
+                update_query,
+                (
+                    temp.quantidade_user_stories_criadas,
+                    temp.quantidade_user_stories_finalizadas,
+                    temp.id_usuario,
+                    temp.id_periodo,
+                    temp.id_projeto,
+                ),
+            )
+        else:
+            # Insert a new record
+            insert_query = """
+            INSERT INTO public.fato_user_story_temporais (
+                id_usuario, id_periodo, id_projeto, 
+                quantidade_user_stories_criadas, quantidade_user_stories_finalizadas
+            ) VALUES (%s, %s, %s, %s, %s)
+            """
+            cursor.execute(
+                insert_query,
+                (
+                    temp.id_usuario,
+                    temp.id_periodo,
+                    temp.id_projeto,
+                    temp.quantidade_user_stories_criadas,
+                    temp.quantidade_user_stories_finalizadas,
+                ),
+            )
                
-        conn.commit()
-        cursor.close()
-        Database().release_connection(conn)
+    conn.commit()
+    cursor.close()
+    Database().release_connection(conn)

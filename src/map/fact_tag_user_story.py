@@ -43,12 +43,12 @@ def extract_data_2_fact_tag_user_storie():
 
         db = Database()
         conn = db.get_connection()
+        cursor = conn.cursor()
         try:
             for story in stories:
                 internal_id_project = None
                 internal_id_tag = []
 
-                cursor = conn.cursor()
                 cursor.execute(select_id_project, (project["name"],))
                 internal_id_project = cursor.fetchone()[0]
                 Logger.info(
