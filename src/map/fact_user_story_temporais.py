@@ -6,25 +6,6 @@ from src.extract.user_storys import get_user_storys_by_project
 from src.extract.users import get_user_by_id
 from src.utils.logger import Logger
 
-# CREATE TABLE public.fato_user_story_temporais (
-# 	id bigserial NOT NULL,
-# 	id_usuario bigserial NOT NULL,
-# 	id_periodo bigserial NOT NULL,
-# 	id_projeto bigserial NOT NULL,
-# 	quantidade_user_stories_finalizadas int4 NULL,
-# 	quantidade_user_stories_criadas int4 NULL,
-# 	CONSTRAINT fato_user_story_temporais_pkey PRIMARY KEY (id),
-# 	CONSTRAINT fk_ft_projeto_us_temporais FOREIGN KEY (id_projeto) REFERENCES public.dim_projeto(id) ON DELETE CASCADE,
-# 	CONSTRAINT fk_ft_us_periodo_temporais FOREIGN KEY (id_periodo) REFERENCES public.dim_periodo(id) ON DELETE CASCADE
-# );
-
-# dim_periodos
-# id|nome      |
-# --+----------+
-#  1|último dia|
-#  2|último mês|
-#  3|último ano|
-
 DIM_PERIODOS = [
     {"id": 1, "nome": "último dia"},
     {"id": 2, "nome": "último mês"},
