@@ -41,7 +41,7 @@ def main():
     upsert_relation_tag_us()
     Logger.info("-----------------------------------------------")
     upsert_relation_project_user()
-    
+
     Database().close_pool()
 
     Logger.info("Finished ETL process")

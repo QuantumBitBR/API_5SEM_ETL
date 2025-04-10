@@ -2,7 +2,9 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from src.map.fact_status_user_story import (
-    extract_data_2_fact_status_user_story, process_fact_status_user_story)
+    extract_data_2_fact_status_user_story,
+    process_fact_status_user_story,
+)
 from src.utils.logger import Logger
 
 
