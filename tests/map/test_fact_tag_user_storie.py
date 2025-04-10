@@ -1,16 +1,17 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from src.map.fact_tag_user_story import process_fact_tag_user_story, zero_all_progress
+from src.map.fact_tag_user_story import (process_fact_tag_user_story,
+                                         zero_all_progress)
 
 
 class TestProcessFactTagUserStorie(unittest.TestCase):
 
-    @patch("src.map.fact_tag_user_storie.Logger")
-    @patch("src.map.fact_tag_user_storie.extract_data_2_fact_tag_user_storie")
-    @patch("src.map.fact_tag_user_storie.zero_all_progress")
-    @patch("src.map.fact_tag_user_storie.upsert_fact_progress_user_storie")
-    def test_process_fact_tag_user_storie(
+    @patch("src.map.fact_tag_user_story.Logger")
+    @patch("src.map.fact_tag_user_story.extract_data_2_fact_tag_user_story")
+    @patch("src.map.fact_tag_user_story.zero_all_progress")
+    @patch("src.map.fact_tag_user_story.upsert_fact_progress_user_storie")
+    def test_process_fact_tag_user_story(
         self, mock_upsert, mock_zero, mock_extract, mock_logger
     ):
         # Arrange
@@ -29,11 +30,11 @@ class TestProcessFactTagUserStorie(unittest.TestCase):
         mock_logger.info.assert_any_call("Upserting fact progress user storie...")
         mock_upsert.assert_called_once_with("mocked_extract_data")
 
-    @patch("src.map.fact_tag_user_storie.Logger")
-    @patch("src.map.fact_tag_user_storie.extract_data_2_fact_tag_user_storie")
-    @patch("src.map.fact_tag_user_storie.zero_all_progress")
-    @patch("src.map.fact_tag_user_storie.upsert_fact_progress_user_storie")
-    def test_process_fact_tag_user_storie(
+    @patch("src.map.fact_tag_user_story.Logger")
+    @patch("src.map.fact_tag_user_story.extract_data_2_fact_tag_user_story")
+    @patch("src.map.fact_tag_user_story.zero_all_progress")
+    @patch("src.map.fact_tag_user_story.upsert_fact_progress_user_storie")
+    def test_process_fact_tag_user_story(
         self, mock_upsert, mock_zero, mock_extract, mock_logger
     ):
         # Arrange
@@ -52,8 +53,8 @@ class TestProcessFactTagUserStorie(unittest.TestCase):
         mock_logger.info.assert_any_call("Upserting fact progress user storie...")
         mock_upsert.assert_called_once_with("mocked_extract_data")
 
-    @patch("src.map.fact_tag_user_storie.Database")
-    @patch("src.map.fact_tag_user_storie.Logger")
+    @patch("src.map.fact_tag_user_story.Database")
+    @patch("src.map.fact_tag_user_story.Logger")
     def test_zero_all_progress(self, mock_logger, mock_database):
         # Arrange
         mock_conn = MagicMock()
@@ -74,8 +75,8 @@ class TestProcessFactTagUserStorie(unittest.TestCase):
         mock_database.return_value.release_connection.assert_called_once_with(mock_conn)
         mock_logger.info.assert_any_call("Database connection closed")
 
-    @patch("src.map.fact_tag_user_storie.Database")
-    @patch("src.map.fact_tag_user_storie.Logger")
+    @patch("src.map.fact_tag_user_story.Database")
+    @patch("src.map.fact_tag_user_story.Logger")
     def test_zero_all_progress_exception(self, mock_logger, mock_database):
         # Arrange
         mock_conn = MagicMock()

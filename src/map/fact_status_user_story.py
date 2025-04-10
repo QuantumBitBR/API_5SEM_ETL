@@ -13,16 +13,16 @@ class FactStatusUserStorie:
 def process_fact_status_user_story():
 
     Logger.info("Starting upsert_fact_progress_user_storie process")
-    extract = extract_data_2_fact_status_user_storie()
+    extract = extract_data_2_fact_status_user_story()
 
     Logger.info("Zeroing all progress quantities...")
     zero_all_status()
 
     Logger.info(f"Upserting fact status user storie...")
-    upsert_fact_status_user_storie(extract)
+    upsert_fact_status_user_story(extract)
 
 
-def extract_data_2_fact_status_user_storie():
+def extract_data_2_fact_status_user_story():
 
     select_id_project = (
         "SELECT id FROM public.dim_projeto WHERE LOWER(nome) = LOWER(%s)"
@@ -82,7 +82,7 @@ def extract_data_2_fact_status_user_storie():
     return etl_progress
 
 
-def upsert_fact_status_user_storie(etl_progress):
+def upsert_fact_status_user_story(etl_progress):
 
     select_fact_progress = "SELECT * FROM public.fato_status_user_story WHERE id_projeto = %s AND id_status = %s"
     insert_fact_progress = "INSERT INTO public.fato_status_user_story (id_projeto, id_status, quantidade_user_story) VALUES (%s, %s, %s)"
