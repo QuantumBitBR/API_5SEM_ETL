@@ -4,6 +4,7 @@ from src.map.fact_status_user_story import process_fact_status_user_story
 from src.map.fact_tag_user_story import process_fact_tag_user_story
 from src.map.fact_user_story_temporais import process_data_2_fact_temporais
 from src.map.projects import upsert_all_projects
+from src.map.relation_tag_user_story import upsert_relation_tag_us
 from src.map.status import upsert_all_status
 from src.map.tags import upsert_all_tags
 from src.map.user_stories import upsert_all_user_stories
@@ -35,6 +36,8 @@ def main():
     process_data_2_fact_eficiencia()
     Logger.info("-----------------------------------------------")
     process_data_2_fact_temporais()
+    Logger.info("-----------------------------------------------")
+    upsert_relation_tag_us()
     Logger.info("-----------------------------------------------")
     
     Database().close_pool()
