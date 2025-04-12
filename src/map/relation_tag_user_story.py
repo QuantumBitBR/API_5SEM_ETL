@@ -11,29 +11,30 @@ from src.utils.logger import Logger
 # 	CONSTRAINT fk_relacionamento_tu_user_story FOREIGN KEY (id_user_story) REFERENCES public.dim_user_story(id) ON DELETE CASCADE
 # );
 
+
 def upsert_relation_tag_us():
     Logger.info("Starting upsert_relation_tag_us process")
 
     db = Database()
     projects = get_all_projects()
     Logger.info(f"Retrieved {len(projects)} projects from the taiga.")
-    
+
     select_internal_user_story_id = (
         "SELECT id FROM public.dim_user_story WHERE id_taiga = CAST(%s AS BIGINT)"
     )
-    
+
     insert_relation = (
         "INSERT INTO public.relacionamento_tag_user_story (id_tag, id_user_story) "
         "VALUES (%s, %s) ON CONFLICT (id_tag, id_user_story) DO NOTHING"
     )
-    
+
     select_relation = (
         "SELECT id_tag, id_user_story FROM public.relacionamento_tag_user_story "
         "WHERE id_tag = %s AND id_user_story = %s"
     )
-    
+
     select_id_tag = "SELECT id FROM public.dim_tag WHERE LOWER(nome) = LOWER(%s)"
-    
+
     conn = db.get_connection()
     Logger.info("Database connection established.")
     try:
@@ -51,7 +52,9 @@ def upsert_relation_tag_us():
                     )
                     cursor = conn.cursor()
                     try:
-                        Logger.debug(f"Executing query to find tag ID: {select_id_tag} with parameter: {tag[0]}")
+                        Logger.debug(
+                            f"Executing query to find tag ID: {select_id_tag} with parameter: {tag[0]}"
+                        )
                         cursor.execute(select_id_tag, (tag[0],))
                         internal_id_tag = cursor.fetchone()
                         if not internal_id_tag:
@@ -60,7 +63,9 @@ def upsert_relation_tag_us():
                             )
                             continue
 
-                        Logger.debug(f"Executing query to find user story ID: {select_internal_user_story_id} with parameter: {story['id']}")
+                        Logger.debug(
+                            f"Executing query to find user story ID: {select_internal_user_story_id} with parameter: {story['id']}"
+                        )
                         cursor.execute(select_internal_user_story_id, (story["id"],))
                         internal_user_story_id = cursor.fetchone()
                         if not internal_user_story_id:
@@ -69,12 +74,22 @@ def upsert_relation_tag_us():
                             )
                             continue
 
-                        Logger.debug(f"Checking if relationship exists with query: {select_relation} and parameters: {internal_id_tag[0]}, {internal_user_story_id[0]}")
-                        cursor.execute(select_relation, (internal_id_tag[0], internal_user_story_id[0]))
+                        Logger.debug(
+                            f"Checking if relationship exists with query: {select_relation} and parameters: {internal_id_tag[0]}, {internal_user_story_id[0]}"
+                        )
+                        cursor.execute(
+                            select_relation,
+                            (internal_id_tag[0], internal_user_story_id[0]),
+                        )
                         existing_relation = cursor.fetchone()
                         if not existing_relation:
-                            Logger.debug(f"Inserting relationship with query: {insert_relation} and parameters: {internal_id_tag[0]}, {internal_user_story_id[0]}")
-                            cursor.execute(insert_relation, (internal_id_tag[0], internal_user_story_id[0]))
+                            Logger.debug(
+                                f"Inserting relationship with query: {insert_relation} and parameters: {internal_id_tag[0]}, {internal_user_story_id[0]}"
+                            )
+                            cursor.execute(
+                                insert_relation,
+                                (internal_id_tag[0], internal_user_story_id[0]),
+                            )
                             conn.commit()
                             Logger.info(
                                 f"Inserted relationship between tag '{tag[0]}' and user story ID: {story['id']}"
@@ -96,4 +111,3 @@ def upsert_relation_tag_us():
         Logger.info("Releasing database connection.")
         db.release_connection(conn)
     Logger.info("Finished upsert_relation_tag_us process.")
-

@@ -1,8 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from src.map.fact_tag_user_story import (process_fact_tag_user_story,
-                                         zero_all_progress)
+from src.map.fact_tag_user_story import process_fact_tag_user_story, zero_all_progress
 
 
 class TestProcessFactTagUserStorie(unittest.TestCase):
