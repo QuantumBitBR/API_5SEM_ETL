@@ -6,7 +6,7 @@ def get_all_projects():
     """Returns a list of projects from Taiga."""
     try:
         client = config.TaigaClient()
-        projects = client.api.projects.list()
+        projects = client.api.projects.list(member=client.api.me().id)
         return [vars(project) for project in projects]
     except Exception as e:
         Logger.error(f"An error occurred while fetching projects: {e}")

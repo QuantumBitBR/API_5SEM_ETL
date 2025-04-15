@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+
+from src.config import enviroments_custom
 from src.config.database import Database
 from src.map.fact_eficiencia_user_story import process_data_2_fact_eficiencia
 from src.map.fact_status_user_story import process_fact_status_user_story
@@ -15,11 +18,20 @@ from src.utils.logger import Logger
 
 def main():
     """main."""
+    
 
     Logger.initialize("etl_process")
 
     print(Database().health_check())
+    
+    Logger.info("Starting ETL process")
+    Logger.info("-----------------------------------------------")
 
+    Logger.info("Logging all environments:")
+    Logger.info(f"TAIGA_API_URL: {enviroments_custom.TAIGA_API_URL}")
+    Logger.info(f"TAIGA_API_USERNAME: {enviroments_custom.TAIGA_USERNAME}")
+    
+    Logger.info("-----------------------------------------------")
     upsert_all_projects()
     Logger.info("-----------------------------------------------")
     upsert_all_users()
@@ -41,6 +53,7 @@ def main():
     upsert_relation_tag_us()
     Logger.info("-----------------------------------------------")
     upsert_relation_project_user()
+    Logger.info("-----------------------------------------------")
 
     Database().close_pool()
 
