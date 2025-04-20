@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 TAIGA_API_URL = os.getenv("TAIGA_API_URL")
 TAIGA_USERNAME = os.getenv("TAIGA_USERNAME")
