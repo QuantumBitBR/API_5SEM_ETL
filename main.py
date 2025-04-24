@@ -18,19 +18,18 @@ from src.utils.logger import Logger
 
 def main():
     """main."""
-    
 
     Logger.initialize("etl_process")
 
     print(Database().health_check())
-    
+
     Logger.info("Starting ETL process")
     Logger.info("-----------------------------------------------")
 
     Logger.info("Logging all environments:")
     Logger.info(f"TAIGA_API_URL: {enviroments_custom.TAIGA_API_URL}")
     Logger.info(f"TAIGA_API_USERNAME: {enviroments_custom.TAIGA_USERNAME}")
-    
+
     Logger.info("-----------------------------------------------")
     upsert_all_projects()
     Logger.info("-----------------------------------------------")

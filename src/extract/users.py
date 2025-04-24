@@ -18,7 +18,8 @@ def get_all_users():
     except Exception as e:
         Logger.error(f"An error occurred while fetching users: {e}")
         return []
-    
+
+
 def get_all_users_by_project(project_id):
     """Returns a list of users by project ID from Taiga."""
     try:
@@ -35,6 +36,7 @@ def get_all_users_by_project(project_id):
     except Exception as e:
         Logger.error(f"An error occurred while fetching users: {e}")
         return []
+
 
 def get_user_by_id(user_id):
     """Returns a user by ID."""

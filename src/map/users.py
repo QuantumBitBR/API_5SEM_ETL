@@ -9,14 +9,13 @@ def upsert_all_users():
     Logger.info("Starting upsert_all_users process")
 
     db = Database()
-    
+
     projects = get_all_projects()
-    
+
     Logger.info(f"Retrieved {len(projects)} projects from source")
-    
+
     for project in projects:
-    
-    
+
         users = get_all_users_by_project(project["id"])
         Logger.info(f"Retrieved {len(users)} users from source")
 
@@ -29,9 +28,11 @@ def upsert_all_users():
             for user in users:
                 cursor = conn.cursor()
                 try:
-                    
+
                     if "email" not in user:
-                        Logger.warning(f"User data does not contain 'email' field: {user}")
+                        Logger.warning(
+                            f"User data does not contain 'email' field: {user}"
+                        )
                         continue
                     cursor.execute(select_user_by_email, (user["email"],))
                     user_in_bd = cursor.fetchone()

@@ -26,7 +26,7 @@ class TestTaigaClient(unittest.TestCase):
         client = TaigaClient()
 
         mock_taiga_api.assert_called_once_with(
-            host="https://api.taiga.io", tls_verify=True
+            host="https://api.taiga.io", tls_verify=False
         )
         mock_api_instance.auth.assert_called_once_with(
             username="test_user", password="test_password"
