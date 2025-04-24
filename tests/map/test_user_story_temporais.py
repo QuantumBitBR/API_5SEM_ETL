@@ -14,7 +14,9 @@ class TestProcessData2FactTemporais(unittest.TestCase):
     @patch("src.map.fact_user_story_temporais.Database")
     @patch("src.map.fact_user_story_temporais.get_all_projects")
     @patch("src.map.fact_user_story_temporais.Logger")
-    def test_process_data_no_projects(self, mock_logger, mock_get_all_projects, mock_database):
+    def test_process_data_no_projects(
+        self, mock_logger, mock_get_all_projects, mock_database
+    ):
         # Mock database connection and cursor
         mock_conn = MagicMock()
         mock_cursor = MagicMock()
@@ -39,7 +41,9 @@ class TestProcessData2FactTemporais(unittest.TestCase):
     @patch("src.map.fact_user_story_temporais.Database")
     @patch("src.map.fact_user_story_temporais.get_all_projects")
     @patch("src.map.fact_user_story_temporais.Logger")
-    def test_process_data_exception_handling(self, mock_logger, mock_get_all_projects, mock_database):
+    def test_process_data_exception_handling(
+        self, mock_logger, mock_get_all_projects, mock_database
+    ):
         # Mock database connection and cursor
         mock_conn = MagicMock()
         mock_cursor = MagicMock()

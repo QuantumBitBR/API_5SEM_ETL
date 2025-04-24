@@ -19,7 +19,9 @@ class TestUpsertRelationProjectUser(unittest.TestCase):
         )
         self.mock_get_all_projects = self.patcher_get_all_projects.start()
 
-        self.patcher_get_user_by_id = patch("src.map.relation_project_user.get_user_by_id")
+        self.patcher_get_user_by_id = patch(
+            "src.map.relation_project_user.get_user_by_id"
+        )
         self.mock_get_user_by_id = self.patcher_get_user_by_id.start()
 
     def tearDown(self):
@@ -28,8 +30,16 @@ class TestUpsertRelationProjectUser(unittest.TestCase):
     def test_upsert_relation_project_user_success(self):
         # Mock data
         self.mock_get_all_projects.return_value = [
-            {"id": 1, "name": "Project 1", "owner": {"id": 101, "email": "user1@example.com"}},
-            {"id": 2, "name": "Project 2", "owner": {"id": 102, "email": "user2@example.com"}},
+            {
+                "id": 1,
+                "name": "Project 1",
+                "owner": {"id": 101, "email": "user1@example.com"},
+            },
+            {
+                "id": 2,
+                "name": "Project 2",
+                "owner": {"id": 102, "email": "user2@example.com"},
+            },
         ]
         self.mock_get_user_by_id.side_effect = [
             {"id": 101, "email": "user1@example.com"},
@@ -70,9 +80,16 @@ class TestUpsertRelationProjectUser(unittest.TestCase):
     def test_upsert_relation_project_user_project_not_found(self):
         # Mock data
         self.mock_get_all_projects.return_value = [
-            {"id": 1, "name": "Project 1", "owner": {"id": 101, "email": "user1@example.com"}}
+            {
+                "id": 1,
+                "name": "Project 1",
+                "owner": {"id": 101, "email": "user1@example.com"},
+            }
         ]
-        self.mock_get_user_by_id.return_value = {"id": 101, "email": "user1@example.com"}
+        self.mock_get_user_by_id.return_value = {
+            "id": 101,
+            "email": "user1@example.com",
+        }
 
         mock_conn = self.mock_db_instance.get_connection.return_value
         mock_cursor = mock_conn.cursor.return_value
@@ -94,7 +111,11 @@ class TestUpsertRelationProjectUser(unittest.TestCase):
     def test_upsert_relation_project_user_user_not_found(self):
         # Mock data
         self.mock_get_all_projects.return_value = [
-            {"id": 1, "name": "Project 1", "owner": {"id": 101, "email": "user1@example.com"}}
+            {
+                "id": 1,
+                "name": "Project 1",
+                "owner": {"id": 101, "email": "user1@example.com"},
+            }
         ]
         self.mock_get_user_by_id.return_value = None  # User not found in Taiga
 

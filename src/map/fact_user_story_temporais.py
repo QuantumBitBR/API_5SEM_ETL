@@ -33,13 +33,11 @@ def process_data_2_fact_temporais():
         "SELECT id FROM public.dim_user_story WHERE id_taiga = CAST(%s AS BIGINT)"
     )
 
-
     now = datetime.datetime.now()  # Calculate 'now' once outside the loop
 
     eficiencia = {}
     conn = Database().get_connection()
     cursor = conn.cursor()
-    
 
     try:
         projects = get_all_projects()
@@ -119,7 +117,9 @@ def process_data_2_fact_temporais():
                     elif periodos["id"] == 3:  # último ano
                         start_period = now - datetime.timedelta(days=365)
                     else:
-                        Logger.warning(f"Unknown period ID: {periodos['id']}... skipping")
+                        Logger.warning(
+                            f"Unknown period ID: {periodos['id']}... skipping"
+                        )
                         continue
 
                     Logger.info(
@@ -194,5 +194,3 @@ def process_data_2_fact_temporais():
         cursor.close()
         Database().release_connection(conn)
         return
-    
-    
