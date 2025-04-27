@@ -25,6 +25,6 @@ class TaigaClient:
 
     def authenticate(self):
         """Authenticates and returns the API instance."""
-        api = TaigaAPI(host=self.api_url, tls_verify=True)
+        api = TaigaAPI(host=self.api_url, tls_verify=False)
         api.auth(username=self.username, password=self.password)
         return api

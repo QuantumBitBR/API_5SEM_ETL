@@ -13,7 +13,7 @@ class FactProgressUserStorie:
 def process_fact_tag_user_story():
 
     Logger.info("Starting upsert_fact_progress_user_storie process")
-    extract = extract_data_2_fact_tag_user_storie()
+    extract = extract_data_2_fact_tag_user_story()
 
     Logger.info("Zeroing all progress quantities...")
     zero_all_progress()
@@ -22,7 +22,7 @@ def process_fact_tag_user_story():
     upsert_fact_progress_user_storie(extract)
 
 
-def extract_data_2_fact_tag_user_storie():
+def extract_data_2_fact_tag_user_story():
 
     select_id_project = (
         "SELECT id FROM public.dim_projeto WHERE LOWER(nome) = LOWER(%s)"

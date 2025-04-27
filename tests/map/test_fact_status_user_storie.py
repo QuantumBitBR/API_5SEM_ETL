@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from src.map.fact_status_user_story import (
-    extract_data_2_fact_status_user_storie,
+    extract_data_2_fact_status_user_story,
     process_fact_status_user_story,
 )
 from src.utils.logger import Logger
@@ -10,11 +10,11 @@ from src.utils.logger import Logger
 
 class TestFactStatusUserStorie(unittest.TestCase):
 
-    @patch("src.map.fact_status_user_storie.extract_data_2_fact_status_user_storie")
-    @patch("src.map.fact_status_user_storie.zero_all_status")
-    @patch("src.map.fact_status_user_storie.upsert_fact_status_user_storie")
+    @patch("src.map.fact_status_user_story.extract_data_2_fact_status_user_story")
+    @patch("src.map.fact_status_user_story.zero_all_status")
+    @patch("src.map.fact_status_user_story.upsert_fact_status_user_story")
     @patch.object(Logger, "info")
-    def test_process_fact_status_user_storie(
+    def test_process_fact_status_user_story(
         self, mock_logger_info, mock_upsert, mock_zero, mock_extract
     ):
         # Arrange
@@ -33,12 +33,12 @@ class TestFactStatusUserStorie(unittest.TestCase):
         mock_logger_info.assert_any_call("Upserting fact status user storie...")
         mock_upsert.assert_called_once_with({"some_key": "some_value"})
 
-    @patch("src.map.fact_status_user_storie.get_all_projects")
-    @patch("src.map.fact_status_user_storie.get_user_storys_by_project")
-    @patch("src.map.fact_status_user_storie.Database")
+    @patch("src.map.fact_status_user_story.get_all_projects")
+    @patch("src.map.fact_status_user_story.get_user_storys_by_project")
+    @patch("src.map.fact_status_user_story.Database")
     @patch.object(Logger, "info")
     @patch.object(Logger, "error")
-    def test_extract_data_2_fact_status_user_storie_exception(
+    def test_extract_data_2_fact_status_user_story_exception(
         self,
         mock_logger_error,
         mock_logger_info,
@@ -58,7 +58,7 @@ class TestFactStatusUserStorie(unittest.TestCase):
         mock_cursor.execute.side_effect = Exception("Database error")
 
         # Act
-        result = extract_data_2_fact_status_user_storie()
+        result = extract_data_2_fact_status_user_story()
 
         # Assert
         assert result == {}
