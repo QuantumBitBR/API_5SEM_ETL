@@ -15,16 +15,15 @@ def upsert_all_user_stories():
     select_user_story_by_taiga_id = (
         "SELECT * FROM public.dim_user_story WHERE id_taiga = CAST(%s AS BIGINT)"
     )
-    
+
     select_status_id_internal = (
         "SELECT id FROM public.dim_status WHERE LOWER(tipo) = LOWER(%s)"
     )
-    
+
     select_user_internal_id = (
         "SELECT id FROM public.dim_usuario WHERE LOWER(email) = LOWER(%s)"
     )
-    
-    
+
     select_project_id_internal = (
         "SELECT id FROM public.dim_projeto WHERE LOWER(nome) = LOWER(%s)"
     )
@@ -35,7 +34,7 @@ def upsert_all_user_stories():
     conn = db.get_connection()
     try:
         for project in projects:
-            
+
             cursor = conn.cursor()
             cursor.execute(select_project_id_internal, (project["name"],))
             internal_project_id = cursor.fetchone()
@@ -48,7 +47,7 @@ def upsert_all_user_stories():
             Logger.debug(
                 f"Executing query to find user ID: {select_project_id_internal} with parameter: {project['owner']['id']}"
             )
-            
+
             stories = get_user_storys_by_project(project["id"])
             Logger.info(
                 f"Extracted {len(stories)} user stories from project {project['name']} (ID: {project['id']})"
@@ -59,16 +58,17 @@ def upsert_all_user_stories():
                     cursor = conn.cursor()
                     cursor.execute(select_user_story_by_taiga_id, (story["id"],))
                     story_in_bd = cursor.fetchone()
-                    
+
                     cursor.execute(
                         select_status_id_internal, (story["status_extra_info"]["name"],)
                     )
                     status_id_internal = cursor.fetchone()
-                    
-                    
+
                     assigned_to_extra_info = story.get("assigned_to_extra_info")
                     taiga_user_id = (
-                        assigned_to_extra_info.get("id") if assigned_to_extra_info else None
+                        assigned_to_extra_info.get("id")
+                        if assigned_to_extra_info
+                        else None
                     )
                     if taiga_user_id is None:
                         Logger.warning(
@@ -83,13 +83,10 @@ def upsert_all_user_stories():
                             f"User {taiga_user_id} not found in Taiga... skipping story {story['id']}"
                         )
                         continue
-                    
+
                     Logger.info(f"Fetched user details: {user_complete}")
                     cursor.execute(select_user_internal_id, (user_complete["email"],))
                     internal_user_id = cursor.fetchone()[0]
-                    
-                    
-                    
 
                     if story_in_bd is None:
                         cursor.execute(
@@ -102,9 +99,9 @@ def upsert_all_user_stories():
                                 story["is_blocked"],
                                 story["is_closed"],
                                 story["due_date"],
-                                status_id_internal[0], 
+                                status_id_internal[0],
                                 internal_user_id,
-                                internal_project_id
+                                internal_project_id,
                             ),
                         )
                         conn.commit()
