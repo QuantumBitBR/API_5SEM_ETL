@@ -20,7 +20,7 @@ def upsert_all_users():
         Logger.info(f"Retrieved {len(users)} users from source")
 
         select_user_by_email = "SELECT * FROM public.dim_usuario WHERE email = %s"
-        insert_user = "INSERT INTO public.dim_usuario (nome, email) VALUES (%s, %s)"
+        insert_user = "INSERT INTO public.dim_usuario (nome, email, role) VALUES (%s, %s, OPERADOR)"
         update_user = "UPDATE public.dim_usuario SET nome = %s WHERE email = %s"
 
         conn = db.get_connection()

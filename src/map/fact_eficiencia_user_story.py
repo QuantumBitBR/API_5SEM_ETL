@@ -89,7 +89,7 @@ def process_data_2_fact_eficiencia():
                     continue
 
                 Logger.info(f"Fetching user details for Taiga ID: {taiga_user_id}")
-                user_complete = get_user_by_id(taiga_user_id)
+                user_complete = get_user_by_id(taiga_user_id, project['id'])
                 if user_complete is None:
                     Logger.error(
                         f"User {taiga_user_id} not found in Taiga... skipping story {story['id']}"
