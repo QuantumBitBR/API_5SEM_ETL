@@ -20,7 +20,7 @@ def upsert_all_users():
         Logger.info(f"Retrieved {len(users)} users from source")
 
         select_user_by_email = "SELECT * FROM public.dim_usuario WHERE email = %s"
-        insert_user = "INSERT INTO public.dim_usuario (nome, email, role) VALUES (%s, %s, OPERADOR)"
+        insert_user = "INSERT INTO public.dim_usuario (nome, email, role, is_enable) VALUES (%s, %s, %s, %s)"
         update_user = "UPDATE public.dim_usuario SET nome = %s WHERE email = %s"
 
         conn = db.get_connection()
@@ -39,7 +39,7 @@ def upsert_all_users():
 
                     if user_in_bd is None:
                         cursor.execute(
-                            insert_user, (user["full_name_display"], user["email"])
+                            insert_user, (user["full_name_display"], user["email"], "OPERADOR", "false")
                         )
                         conn.commit()
                         Logger.info(f"Inserted user {user['email']}")
@@ -59,4 +59,4 @@ def upsert_all_users():
         finally:
             db.release_connection(conn)
         Logger.info("Completed upsert_all_users process")
-        return len(users)
+    return 
