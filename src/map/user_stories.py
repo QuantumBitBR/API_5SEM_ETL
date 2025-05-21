@@ -28,8 +28,13 @@ def upsert_all_user_stories():
         "SELECT id FROM public.dim_projeto WHERE LOWER(nome) = LOWER(%s)"
     )
 
-    insert_user_story = "INSERT INTO public.dim_user_story (id_taiga, assunto, criado_em, finalizado_em, bloqueado, encerrado, data_limite, id_status, id_usuario, id_projeto) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    update_user_story = "UPDATE public.dim_user_story SET assunto = %s, criado_em = %s, finalizado_em = %s, bloqueado = %s, encerrado = %s, data_limite = %s, id_status = %s, id_usuario = %s, id_projeto = %s WHERE id_taiga = %s"
+    insert_user_story = "INSERT INTO public.dim_user_story (id_taiga, assunto, criado_em, finalizado_em, bloqueado, encerrado, data_limite, id_status, id_usuario, id_projeto, id_sprint) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    update_user_story = "UPDATE public.dim_user_story SET assunto = %s, criado_em = %s, finalizado_em = %s, bloqueado = %s, encerrado = %s, data_limite = %s, id_status = %s, id_usuario = %s, id_projeto = %s, id_sprint = %s WHERE id_taiga = %s"
+    
+    select_sprint_id_internal = (
+        "SELECT id FROM public.dim_sprint WHERE LOWER(nome) = LOWER(%s)"
+    )
+    insert_sprint = "INSERT INTO public.dim_sprint (nome) VALUES (%s)"
 
     conn = db.get_connection()
     try:
@@ -55,7 +60,27 @@ def upsert_all_user_stories():
             for story in stories:
 
                 try:
-                    cursor = conn.cursor()
+                    
+                    sprint_id_internal = None
+                    if story["milestone_name"] is not None:
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            select_sprint_id_internal, (story["milestone_name"],)
+                        )
+                        sprint_id_internal = cursor.fetchone()[0]
+                        
+                        if not sprint_id_internal:
+                            cursor.execute(insert_sprint, (story["milestone_name"],))
+                            conn.commit()
+                            Logger.info(f"Inserted sprint {story['milestone_name']}")
+                            cursor.execute(
+                                select_sprint_id_internal, (story["milestone_name"],)
+                            )
+                            sprint_id_internal = cursor.fetchone()[0]
+                            Logger.info(f"Fetched sprint ID: {sprint_id_internal}")
+                        else:
+                            Logger.info(f"Fetched sprint ID: {sprint_id_internal}")
+
                     cursor.execute(select_user_story_by_taiga_id, (story["id"],))
                     story_in_bd = cursor.fetchone()
 
@@ -102,6 +127,7 @@ def upsert_all_user_stories():
                                 status_id_internal[0],
                                 internal_user_id,
                                 internal_project_id,
+                                sprint_id_internal,
                             ),
                         )
                         conn.commit()
@@ -119,6 +145,7 @@ def upsert_all_user_stories():
                                 status_id_internal[0],
                                 internal_user_id,
                                 internal_project_id,
+                                sprint_id_internal,
                                 story["id"],
                             ),
                         )
