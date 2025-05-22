@@ -1,0 +1,26 @@
+name: Deploy via SSH (Git Pull)
+
+on:
+  push:
+    branches:
+      - main
+      - sprint-3
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Add Remote Server to Known Hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Git Pull on Remote Server
+      run: |
+        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << EOF
+          cd apps/API_5SEM_ETL/
+          git pull origin $(git rev-parse --abbrev-ref HEAD)
+        EOF
