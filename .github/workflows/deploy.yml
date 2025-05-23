@@ -1,4 +1,4 @@
-name: Deploy via SSH (Git Pull)
+name: Continuos Integration - Stratify - ETL
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
       - sprint-3
 jobs:
   deploy:
+    name: deploy
     runs-on: ubuntu-latest
     steps:
     - name: Configure SSH
