@@ -39,7 +39,13 @@ def upsert_all_users():
 
                     if user_in_bd is None:
                         cursor.execute(
-                            insert_user, (user["full_name_display"], user["email"], "OPERADOR", "false")
+                            insert_user,
+                            (
+                                user["full_name_display"],
+                                user["email"],
+                                "OPERADOR",
+                                "false",
+                            ),
                         )
                         conn.commit()
                         Logger.info(f"Inserted user {user['email']}")
@@ -59,4 +65,4 @@ def upsert_all_users():
         finally:
             db.release_connection(conn)
         Logger.info("Completed upsert_all_users process")
-    return 
+    return
