@@ -56,7 +56,7 @@ def upsert_relation_project_user():
                     )
                     continue
 
-                user_complete = get_user_by_id(taiga_user_id, project['id'])
+                user_complete = get_user_by_id(taiga_user_id, project["id"])
                 if user_complete is None:
                     Logger.error(
                         f"User {taiga_user_id} not found in Taiga... skipping project {project['id']}"
