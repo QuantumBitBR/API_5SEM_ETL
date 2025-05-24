@@ -59,23 +59,23 @@ def process_data_2_fact_eficiencia():
 
                 created_date = datetime.datetime.strptime(
                     story["created_date"], "%Y-%m-%dT%H:%M:%S.%fZ"
-                )
+                ).replace(tzinfo=datetime.timezone.utc)
                 finish_date = story["finish_date"]
                 if finish_date is None:
                     Logger.warning(
-                        f"Finish date is None for story {story['id']}... skipping"
+                        f"Finish date is None for story {story['id']}... using current datetime"
                     )
-                    continue
+                    finish_date = datetime.datetime.now(datetime.timezone.utc)
                 else:
                     finish_date = datetime.datetime.strptime(
                         finish_date, "%Y-%m-%dT%H:%M:%S.%fZ"
-                    )
+                    ).replace(tzinfo=datetime.timezone.utc)
 
                 duration = (
                     finish_date - created_date
-                ).total_seconds() / 60  # Convert duration to minutes
+                ).total_seconds() / 3600  # Convert duration to hours
                 Logger.info(
-                    f"Story {story['id']} - Created Date: {created_date}, Finish Date: {finish_date}, Duration (minutes): {duration}"
+                    f"Story {story['id']} - Created Date: {created_date}, Finish Date: {finish_date}, Duration (hours): {duration}"
                 )
 
                 assigned_to_extra_info = story.get("assigned_to_extra_info")
