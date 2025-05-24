@@ -34,8 +34,13 @@ def upsert_relation_tag_us():
     )
 
     select_id_tag = "SELECT id FROM public.dim_tag WHERE LOWER(nome) = LOWER(%s)"
-
+    
+    
+    trucate_table = "TRUNCATE TABLE public.relacionamento_tag_user_story"
     conn = db.get_connection()
+    conn.cursor().execute(trucate_table)
+    conn.commit()
+
     Logger.info("Database connection established.")
     try:
         for project in projects:

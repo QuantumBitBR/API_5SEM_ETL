@@ -323,3 +323,4 @@ def retrabalho(user_story, conn, cursor):
         Logger.error(
             f"Error processing rework logic for user story {user_story['id']}: {e}"
         )
+        
